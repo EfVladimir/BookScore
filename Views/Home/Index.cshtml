@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Book>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<div class="container">
+    <h1 class="display-4">Library collection</h1>
+    <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Название</th>
+      <th scope="col">Автор</th>
+      <th scope="col">Рейтинг</th>
+      <th scope="col">Поставить рейтинг</th>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach (var book in Model)
+    {
+        <tr>
+            <td scope="row">@book.Name</td>
+            <td>@book.Author</td>
+            <td><p id="@book.Id"></p></td>
+            <td><input class="but" data-id="@book.Id" type="button" value="Узнать рейтинг"/></td>
+            <td>
+                <input class="but" data-id="@book.Id" type="button" value="Поставить рейтинг"/>
+            </td>
+        </tr>
+    }
+  </tbody>
+</table>
+</div>
+<script>
+        $('.but').click(function () {
+    event.preventDefault();
+    var bookId = this.dataset.id;
+    var url = "/Home/GetRating/" + Number(bookId);
+    $.ajax({
+        url: url,
+        method: 'GET',
+        dataType: 'json',
+        success: function (rating) {
+            $("#"+bookId).html(rating);        
+        },
+    }); 
+ });
+ </script>
